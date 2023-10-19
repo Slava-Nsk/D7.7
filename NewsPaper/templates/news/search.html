@@ -1,0 +1,50 @@
+{% extends 'default.html' %}
+{% load my_filters %}
+
+{% block title %}
+Поиск по записям
+{% endblock title %}
+
+{% block content %}
+<br>
+<form action="" method="get">
+       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
+       {{ filterset.form.as_p }}
+       {# Добавим кнопку отправки данных формы #}
+       <input type="submit" value="Найти" />
+   </form>
+   <h3>{{ time_now|date:'M d Y' }}</h3>
+<hr><hr>
+{% if search_result %}
+        <h1>Результаты поиска</h1>
+    <h1>{% for i in search_result %}</h1>
+    <h3><a href="../{{i.pk}}">{{ i.title }}</a></h3>
+    <p><b>{{ i.in_time|date:'d.m.Y' }}</b> |  {{ i.text|truncatechars:20|censor }}</p>
+    <hr>
+    {% endfor %}
+{% else %}
+    <p>Результатов нет</p>
+{% endif %}
+
+{% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+
+{% endblock content %}

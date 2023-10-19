@@ -1,0 +1,47 @@
+<!-- унаследовал шаблон -->
+{% extends 'default.html' %}
+{% load my_filters %}
+
+
+
+{% block title %}
+Новости
+{% endblock title %}
+
+
+
+
+<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+{% block content %}
+<p>Всего новостей: {{ posts_list|length}}</p>
+
+<h1>{% for i in posts_list %}</h1>
+<h3><a href="{{i.pk}}">{{ i.title }}</a></h3>
+<p><b>{{ i.in_time|date:'d.m.Y' }}</b> |  {{ i.text|truncatechars:20|censor }}</p>
+<hr>
+{% endfor %}
+<!-- Блок с информацией о других страницах -->
+ {# Информация о предыдущих страницах #}
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+
+
+{% endblock content %}
